@@ -180,6 +180,24 @@ class MemManU :public Component {
 	~MemManU();
 };
 
+class IBuffer :public Component {
+  public:
+
+	ParseXML *XML;
+	int  ithCore;
+	InputParameter interface_ip;
+	CoreDynParam  coredynp;
+	double clockRate,executionTime;
+	double scktRatio, chip_PR_overhead, macro_PR_overhead;
+	double int_regfile_height, fp_regfile_height;
+	ArrayST * Buffer;
+	bool exist;
+
+	IBuffer(ParseXML *XML_interface, int ithCore_, InputParameter* interface_ip_,const CoreDynParam & dyn_p_, bool exist_=true);
+    void computeEnergy(bool is_tdp=true);
+    void displayEnergy(uint32_t indent = 0,int plevel = 100, bool is_tdp=true);
+	~IBuffer();
+};
 class RegFU :public Component {
   public:
 
@@ -200,7 +218,6 @@ class RegFU :public Component {
     void displayEnergy(uint32_t indent = 0,int plevel = 100, bool is_tdp=true);
 	~RegFU();
 };
-
 class EXECU :public Component {
   public:
 
