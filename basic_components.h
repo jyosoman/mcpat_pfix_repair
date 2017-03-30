@@ -172,7 +172,7 @@ public:
 	double IFU_duty_cycle,BR_duty_cycle,LSU_duty_cycle,MemManU_I_duty_cycle,
 	       MemManU_D_duty_cycle, ALU_duty_cycle,MUL_duty_cycle,
 	       FPU_duty_cycle, ALU_cdb_duty_cycle,MUL_cdb_duty_cycle,
-	       FPU_cdb_duty_cycle;
+	       FPU_cdb_duty_cycle,IBuff_duty_cycle;
 	double vdd;
 	double power_gating_vcc;
     ~CoreDynParam(){};

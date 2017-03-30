@@ -64,6 +64,11 @@ typedef struct{
 	double predictor_accesses;
 } predictor_systemcore;
 typedef struct{
+    int entryCount;
+    int total_reads;
+    int total_writes;
+}ibuffer_systemcore;
+typedef struct{
 	int number_entries;
 	int cache_policy;//0 no write or write-though with non-write allocate;1 write-back with write-allocate
 	double total_hits;
