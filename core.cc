@@ -1832,7 +1832,7 @@ l2cache(0) {
     ifu = new InstFetchU(XML, ithCore, &interface_ip, coredynp, exit_flag);
     lsu = new LoadStoreU(XML, ithCore, &interface_ip, coredynp, exit_flag);
     mmu = new MemManU(XML, ithCore, &interface_ip, coredynp, exit_flag);
-    ibuff= new IBuffeR(XML, ithCore, &interface_ip,coredynp,exit_flag);
+    ibuff= new IBuffer(XML, ithCore, &interface_ip,coredynp,exit_flag);
     exu = new EXECU(XML, ithCore, &interface_ip, lsu->lsq_height, coredynp, exit_flag);
     undiffCore = new UndiffCore(XML, ithCore, &interface_ip, coredynp, exit_flag);
     if (coredynp.core_ty == OOO) {
@@ -3491,8 +3491,7 @@ void IBuffer::computeEnergy(bool is_tdp) {
         Buffer->tdp_stats = Buffer->stats_t;
     } else {
         //init stats for Runtime Dynamic (RTP)
-        Buffer->stats_t.readAc.access = XML->sys.core[ithCore].ibuff.total_accesses;
-        Buffer->stats_t.readAc.miss = XML->sys.core[ithCore].ibuff.total_misses;
+        Buffer->stats_t.readAc.access = XML->sys.core[ithCore].ibuff.total_reads;
         Buffer->stats_t.readAc.hit = Buffer->stats_t.readAc.access - Buffer->stats_t.readAc.miss;
         Buffer->rtp_stats = Buffer->stats_t;
     }
@@ -3510,7 +3509,7 @@ void IBuffer::computeEnergy(bool is_tdp) {
     }
 }
 
-void IBuffer::displayEnergy(uint32_t indent = 0, int plevel = 100, bool is_tdp = true) {
+void IBuffer::displayEnergy(uint32_t indent, int plevel , bool is_tdp) {
     if (!exist) return;
     string indent_str(indent, ' ');
     string indent_str_next(indent + 2, ' ');
@@ -3523,14 +3522,14 @@ void IBuffer::displayEnergy(uint32_t indent = 0, int plevel = 100, bool is_tdp =
         cout << indent_str_next << "Subthreshold Leakage = "
                 << (long_channel ? Buffer->power.readOp.longer_channel_leakage : Buffer->power.readOp.leakage) << " W" << endl;
         if (power_gating) cout << indent_str_next << "Subthreshold Leakage with power gating = "
-                << (long_channel ? Buffer->power.readOp.power_gated_with_long_channel_leakage : itlb->power.readOp.power_gated_leakage) << " W" << endl;
+                << (long_channel ? Buffer->power.readOp.power_gated_with_long_channel_leakage : Buffer->power.readOp.power_gated_leakage) << " W" << endl;
         cout << indent_str_next << "Gate Leakage = " << Buffer->power.readOp.gate_leakage << " W" << endl;
         cout << indent_str_next << "Runtime Dynamic = " << Buffer->rt_power.readOp.dynamic / executionTime << " W" << endl;
         cout << endl;
     } else {
-        cout << indent_str_next << "IBuffer    Peak Dynamic = " << itlb->rt_power.readOp.dynamic * clockRate << " W" << endl;
-        cout << indent_str_next << "IBuffer    Subthreshold Leakage = " << itlb->rt_power.readOp.leakage << " W" << endl;
-        cout << indent_str_next << "IBuffer    Gate Leakage = " << itlb->rt_power.readOp.gate_leakage << " W" << endl;
+        cout << indent_str_next << "IBuffer    Peak Dynamic = " << Buffer->rt_power.readOp.dynamic * clockRate << " W" << endl;
+        cout << indent_str_next << "IBuffer    Subthreshold Leakage = " << Buffer->rt_power.readOp.leakage << " W" << endl;
+        cout << indent_str_next << "IBuffer    Gate Leakage = " << Buffer->rt_power.readOp.gate_leakage << " W" << endl;
     }
 }
 

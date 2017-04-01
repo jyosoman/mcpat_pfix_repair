@@ -294,6 +294,7 @@ typedef struct{
 	dtlb_systemcore dtlb;
 	dcache_systemcore dcache;
 	BTB_systemcore BTB;
+        ibuffer_systemcore ibuff;
 
 } system_core;
 typedef struct{
