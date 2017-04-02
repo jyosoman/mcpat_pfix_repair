@@ -135,8 +135,8 @@ double power_gating_leakage_reduction(
 
 class CoreDynParam {
 public:
-	CoreDynParam(){};
-	CoreDynParam(ParseXML *XML_interface, int ithCore_);
+    CoreDynParam(){};
+    CoreDynParam(ParseXML *XML_interface, int ithCore_);
 	//    :XML(XML_interface),
 	//     ithCore(ithCore_)
 	//     core_ty(inorder),
@@ -151,15 +151,15 @@ public:
 	//     globalCheckpoint(32),
 	//     instructionLength(32){};
 	//ParseXML * XML;
-	bool opt_local;
-	bool x86;
-	bool Embedded;
+    bool opt_local;
+    bool x86;
+    bool Embedded;
     enum Core_type  core_ty;
-	enum Renaming_type rm_ty;
+    enum Renaming_type rm_ty;
     enum Scheduler_type scheu_ty;
     double clockRate,executionTime;
     int  arch_ireg_width, arch_freg_width, phy_ireg_width, phy_freg_width, hthread_width;
-    int  num_IRF_entry, num_FRF_entry, num_ifreelist_entries, num_ffreelist_entries;
+    int  num_IRF_entry, num_FRF_entry, num_ifreelist_entries, num_ffreelist_entries,num_Ibuff_entries;
     int  fetchW, decodeW,issueW,peak_issueW, commitW,peak_commitW, predictionW, fp_issueW, fp_decodeW;
     int  perThreadState, globalCheckpoint, instruction_length, pc_width, opcode_length, micro_opcode_length;
     int  num_hthreads, pipeline_stages, fp_pipeline_stages, num_pipelines, num_fp_pipelines;
@@ -169,12 +169,12 @@ public:
     double pipeline_duty_cycle, total_cycles, busy_cycles, idle_cycles;
     bool regWindowing,multithreaded;
     double pppm_lkg_multhread[4];
-	double IFU_duty_cycle,BR_duty_cycle,LSU_duty_cycle,MemManU_I_duty_cycle,
+    double IFU_duty_cycle,BR_duty_cycle,LSU_duty_cycle,MemManU_I_duty_cycle,
 	       MemManU_D_duty_cycle, ALU_duty_cycle,MUL_duty_cycle,
 	       FPU_duty_cycle, ALU_cdb_duty_cycle,MUL_cdb_duty_cycle,
 	       FPU_cdb_duty_cycle,IBuff_duty_cycle;
-	double vdd;
-	double power_gating_vcc;
+    double vdd;
+    double power_gating_vcc;
     ~CoreDynParam(){};
 };
 

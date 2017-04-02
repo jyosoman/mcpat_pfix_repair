@@ -586,6 +586,20 @@ void ParseXML::parse(char* filepath)
 								if (strcmp(xNode4.getChildNode("stat",k).getAttribute("name"),"replacements")==0) {sys.core[i].BTB.replacements=atof(xNode4.getChildNode("stat",k).getAttribute("value"));continue;}
 							}
 						}
+                                                if (strcmp(xNode4.getAttribute("name"),"IBuffer")==0)
+						{//find system.core0.itlb
+							itmp=xNode4.nChildNode("param");
+							for(k=0; k<itmp; k++)
+							{ //get all items of param in system.core0.itlb--itlb
+								if (strcmp(xNode4.getChildNode("param",k).getAttribute("name"),"IBuffer_size")==0) sys.core[i].ibuff.entryCount=atoi(xNode4.getChildNode("param",k).getAttribute("value"));
+							}
+							itmp=xNode4.nChildNode("stat");
+							for(k=0; k<itmp; k++)
+							{ //get all items of stat in itlb
+								if (strcmp(xNode4.getChildNode("stat",k).getAttribute("name"),"read_accesses")==0) {sys.core[i].ibuff.total_reads=atoi(xNode4.getChildNode("stat",k).getAttribute("value"));continue;}
+								if (strcmp(xNode4.getChildNode("stat",k).getAttribute("name"),"write_accesses")==0) {sys.core[i].ibuff.total_writes=atoi(xNode4.getChildNode("stat",k).getAttribute("value"));continue;}
+							}
+						}
 					}
 				}
 				else {
@@ -1633,6 +1647,9 @@ void ParseXML::initialize() //Initialize all
 		sys.core[i].BTB.read_misses=1;
 		sys.core[i].BTB.write_misses=1;
 		sys.core[i].BTB.replacements=1;
+                sys.core[i].ibuff.entryCount=20;
+                sys.core[i].ibuff.total_reads=100;
+                sys.core[i].ibuff.total_writes=100;
 	}
 
 	//system_L1directory

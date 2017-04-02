@@ -1005,7 +1005,7 @@ exist(exist_) {
     interface_ip.pure_cam = false;
     interface_ip.pure_ram = true;
     interface_ip.line_sz = int(ceil(data / 32.0))*4;
-    interface_ip.cache_sz = coredynp.num_IRF_entry * interface_ip.line_sz;
+    interface_ip.cache_sz = coredynp.num_Ibuff_entries * interface_ip.line_sz;
     interface_ip.assoc = 1;
     interface_ip.nbanks = 1;
     interface_ip.out_w = interface_ip.line_sz * 8;
@@ -1016,13 +1016,13 @@ exist(exist_) {
     interface_ip.obj_func_dyn_power = 0;
     interface_ip.obj_func_leak_power = 0;
     interface_ip.obj_func_cycle_t = 1;
-    interface_ip.num_rw_ports = 1; //this is the transfer port for saving/restoring states when exceptions happen.
-    interface_ip.num_rd_ports = 2 * coredynp.peak_issueW;
-    interface_ip.num_wr_ports = coredynp.peak_issueW;
+    interface_ip.num_rw_ports = 0; //this is the transfer port for saving/restoring states when exceptions happen.
+    interface_ip.num_rd_ports = 0 * coredynp.peak_issueW;
+    interface_ip.num_wr_ports = 2* coredynp.peak_issueW;
     interface_ip.num_se_rd_ports = 0;
-    Buffer = new ArrayST(&interface_ip, "Integer Register File", Core_device, coredynp.opt_local, coredynp.core_ty);
-    Buffer->area.set_area(Buffer->area.get_area() + Buffer->local_result.area * coredynp.num_pipelines * cdb_overhead * ((coredynp.scheu_ty == ReservationStation) ? XML->sys.core[ithCore].number_hardware_threads : 1));
-    area.set_area(area.get_area() + Buffer->local_result.area * coredynp.num_pipelines * cdb_overhead * ((coredynp.scheu_ty == ReservationStation) ? XML->sys.core[ithCore].number_hardware_threads : 1));
+    Buffer = new ArrayST(&interface_ip, "Core Instruction Buffer", Core_device, coredynp.opt_local, coredynp.core_ty);
+    Buffer->area.set_area(Buffer->area.get_area() + Buffer->local_result.area * coredynp.num_pipelines);
+    area.set_area(area.get_area() + Buffer->local_result.area * coredynp.num_pipelines);
 
 }
 
@@ -3909,6 +3909,21 @@ void Core::displayEnergy(uint32_t indent, int plevel, bool is_tdp) {
                 exu->displayEnergy(indent + 4, plevel, is_tdp);
             }
         }
+        if (ibuff->exist) {
+            cout << indent_str << "Instruction Buffer:" << endl;
+            cout << indent_str_next << "Area = " << ibuff->area.get_area()*1e-6 << " mm^2" << endl;
+            cout << indent_str_next << "Peak Dynamic = " << ibuff->power.readOp.dynamic * clockRate << " W" << endl;
+            cout << indent_str_next << "Subthreshold Leakage = "
+                    << (long_channel ? ibuff->power.readOp.longer_channel_leakage : ibuff->power.readOp.leakage) << " W" << endl;
+            if (power_gating) cout << indent_str_next << "Subthreshold Leakage with power gating = "
+                    << (long_channel ? ibuff->power.readOp.power_gated_with_long_channel_leakage : ibuff->power.readOp.power_gated_leakage) << " W" << endl;
+            cout << indent_str_next << "Gate Leakage = " << ibuff->power.readOp.gate_leakage << " W" << endl;
+            cout << indent_str_next << "Runtime Dynamic = " << ibuff->rt_power.readOp.dynamic / executionTime << " W" << endl;
+            cout << endl;
+            if (plevel > 2) {
+                ibuff->displayEnergy(indent + 4, plevel, is_tdp);
+            }
+        }
         //		if (plevel >2)
         //		{
         //			if (undiffCore->exist)
@@ -4244,6 +4259,7 @@ void Core::set_core_param() {
     coredynp.arch_freg_width = int(ceil(log2(XML->sys.core[ithCore].archi_Regs_FRF_size)));
     coredynp.num_IRF_entry = XML->sys.core[ithCore].archi_Regs_IRF_size;
     coredynp.num_FRF_entry = XML->sys.core[ithCore].archi_Regs_FRF_size;
+    coredynp.num_Ibuff_entries=XML->sys.core[ithCore].ibuff.entryCount;
     coredynp.pipeline_duty_cycle = XML->sys.core[ithCore].pipeline_duty_cycle;
     coredynp.total_cycles = XML->sys.core[ithCore].total_cycles;
     coredynp.busy_cycles = XML->sys.core[ithCore].busy_cycles;
@@ -4276,6 +4292,7 @@ void Core::set_core_param() {
     coredynp.ALU_cdb_duty_cycle = XML->sys.core[ithCore].ALU_cdb_duty_cycle;
     coredynp.MUL_cdb_duty_cycle = XML->sys.core[ithCore].MUL_cdb_duty_cycle;
     coredynp.FPU_cdb_duty_cycle = XML->sys.core[ithCore].FPU_cdb_duty_cycle;
+    coredynp.IBuff_duty_cycle=XML->sys.core[ithCore].IBuff_duty_cycle;
     //	}
 
 

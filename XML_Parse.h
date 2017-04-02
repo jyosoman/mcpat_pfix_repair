@@ -283,6 +283,7 @@ typedef struct{
 	double ALU_cdb_duty_cycle ;
 	double MUL_cdb_duty_cycle ;
 	double FPU_cdb_duty_cycle ;
+        double IBuff_duty_cycle;
 
 	double vdd;
 	double power_gating_vcc;
