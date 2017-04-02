@@ -185,10 +185,11 @@ public:
     int ithCore;
     InputParameter interface_ip;
     CoreDynParam coredynp;
+    ArrayST * Buffer;
     double clockRate, executionTime;
     double scktRatio, chip_PR_overhead, macro_PR_overhead;
     double int_regfile_height, fp_regfile_height;
-    ArrayST * Buffer;
+    
     bool exist;
 
     IBuffer(ParseXML *XML_interface, int ithCore_, InputParameter* interface_ip_, const CoreDynParam & dyn_p_, bool exist_ = true);
