@@ -265,7 +265,7 @@
             </component>
             <component id="system.core0.IBuffer" name="IBuffer">
                 <!-- all the buffer related are optional -->
-                <param name="IBuffer_size" value="20"/> 
+                <param name="IBuffer_size" value="32"/> 
                 <!-- the parameters are capacity,block_width,associativity,bank, throughput w.r.t. core clock, latency w.r.t. core clock,-->
                 <stat name="read_accesses" value="400000"/> <!--See IFU code for guideline -->
                 <stat name="write_accesses" value="0"/>

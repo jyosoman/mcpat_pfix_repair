@@ -295,6 +295,7 @@ MCFrontEnd::MCFrontEnd(ParseXML *XML_interface,InputParameter* interface_ip_, co
  readBuffer(0),
  writeBuffer(0)
 {
+    cout<<"Memory Initialisation here"<<endl;
   /* All computations are for a single MC
    *
    */
@@ -386,6 +387,7 @@ MCFrontEnd::MCFrontEnd(ParseXML *XML_interface,InputParameter* interface_ip_, co
   writeBuffer = new ArrayST(&interface_ip, "MC writeBuffer", Uncore_device);
   writeBuffer->area.set_area(writeBuffer->area.get_area()+ writeBuffer->local_result.area*XML->sys.mc.memory_channels_per_mc);
   area.set_area(area.get_area()+ writeBuffer->local_result.area*XML->sys.mc.memory_channels_per_mc);
+  cout<<"Memory Initialised here"<<endl;
 }
 
 void MCFrontEnd::computeEnergy(bool is_tdp)

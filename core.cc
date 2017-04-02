@@ -1020,7 +1020,9 @@ exist(exist_) {
     interface_ip.num_rd_ports = 0 * coredynp.peak_issueW;
     interface_ip.num_wr_ports = 2* coredynp.peak_issueW;
     interface_ip.num_se_rd_ports = 0;
+    cout<<"Creating buffer Array here"<<endl;
     Buffer = new ArrayST(&interface_ip, "Core Instruction Buffer", Core_device, coredynp.opt_local, coredynp.core_ty);
+        cout<<"End creating buffer Array here"<<endl;
     Buffer->area.set_area(Buffer->area.get_area() + Buffer->local_result.area * coredynp.num_pipelines);
     area.set_area(area.get_area() + Buffer->local_result.area * coredynp.num_pipelines);
 
@@ -1866,6 +1868,10 @@ l2cache(0) {
         mmu->area.set_area(mmu->area.get_area() + pipeline_area_per_unit);
         area.set_area(area.get_area() + mmu->area.get_area());
     }
+    if(ibuff->exist){
+        ibuff->area.set_area(ibuff->area.get_area() + pipeline_area_per_unit);
+        area.set_area(area.get_area() + ibuff->area.get_area());        
+    }
 
     if (coredynp.core_ty == OOO) {
         if (rnu->exist) {
@@ -1889,6 +1895,7 @@ l2cache(0) {
     //  clockNetwork.start_wiring_level =5;//toplevel metal
     //  clockNetwork.num_regs           = corepipe.tot_stage_vector;
     //  clockNetwork.optimize_wire();
+        cout<<"Here Last"<<endl;
 }
 
 void BranchPredictor::computeEnergy(bool is_tdp) {
