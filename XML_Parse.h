@@ -543,6 +543,14 @@ typedef struct{
 } system_pcie;
 
 typedef struct{
+    int number_buffers;
+    int type;
+    int entryCount;
+    int numWrites;
+    int numQueries;
+    double clockRate;
+}system_GBuffer;
+typedef struct{
 	//All number_of_* at the level of 'system' Ying 03/21/2009
 	int number_of_cores;
 	int number_of_L1Directories;
@@ -600,6 +608,7 @@ typedef struct{
 	system_mc flashc;
 	system_niu niu;
 	system_pcie pcie;
+        system_GBuffer gbuffer;
 } root_system;
 
 class ParseXML

@@ -593,7 +593,6 @@ SharedCache::SharedCache(ParseXML* XML_interface, int ithCache_, InputParameter*
 //  clockNetwork.start_wiring_level =5;//toplevel metal
 //  clockNetwork.num_regs           = pipeLogicCache.tot_stage_vector + pipeLogicDirectory.tot_stage_vector;
 //  clockNetwork.optimize_wire();
-cout<<"Shared Memory Initialised here"<<endl;
 }
 
 

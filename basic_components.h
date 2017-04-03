@@ -247,6 +247,14 @@ public:
     ~ProcParam(){};
 };
 
+class GlobBufferParam{
+public:
+    GlobBufferParam(){};
+    string name;
+    int numCores;
+    int numChannels, numEntries;
+};
+
 class NIUParam {
 public:
 	NIUParam(){};

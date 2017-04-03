@@ -50,7 +50,8 @@ Processor::Processor(ParseXML *XML_interface)
  mc(0),
  niu(0),
  pcie(0),
- flashcontroller(0)
+ flashcontroller(0),
+        gbuff(0)
 {
   /*
    *  placement and routing overhead is 10%, core scales worse than cache 40% is accumulated from 90 to 22nm
@@ -314,6 +315,19 @@ Processor::Processor(ParseXML *XML_interface)
 	  rt_power = rt_power  + pcies.rt_power;
 
   }
+  if(XML->sys.gbuffer.entryCount>0){
+      gbuff=new globalBuffer(XML,&interface_ip);
+      gbuff->computeEnergy();
+      gbuff->computeEnergy(false);
+      gbuffers.area.set_area(gbuffers.area.get_area()+gbuff->area.get_area());
+      area.set_area(area.get_area()+gbuff->area.get_area());
+      set_pppm(pppm_t,gbuff->clockRate,1,1,1);
+      gbuffers.power=gbuff->power*pppm_t;
+      power=power+gbuffers.power;
+      set_pppm(pppm_t,gbuff->clockRate,1,1,1);
+      gbuffers.rt_power=gbuff->rt_power*pppm_t;
+      rt_power=rt_power+gbuffers.rt_power;
+  }
 
   if (numNOC >0)
   {
@@ -490,7 +504,7 @@ void Processor::displayEnergy(uint32_t indent, int plevel, bool is_tdp)
 		//cout <<indent_str<<"Interconnect metal projection= "<<XML->sys.interconnect_projection_type<<endl;
 		displayInterconnectType(XML->sys.interconnect_projection_type, indent);
 		cout <<indent_str<<"Core clock Rate(MHz) "<<XML->sys.core[0].clock_rate<<endl;
-    	cout <<endl;
+                cout <<endl;
 		cout <<"*****************************************************************************************"<<endl;
 		cout <<"Processor: "<<endl;
 		cout << indent_str << "Area = " << area.get_area()*1e-6<< " mm^2" << endl;
@@ -641,7 +655,22 @@ void Processor::displayEnergy(uint32_t indent, int plevel, bool is_tdp)
 					cout << indent_str_next << "Gate Leakage = " << pcies.power.readOp.gate_leakage << " W" << endl;
 					cout << indent_str_next << "Runtime Dynamic = " << pcies.rt_power.readOp.dynamic << " W" << endl;
 					cout <<endl;
-				}
+            }
+            if (XML->sys.gbuffer.number_buffers > 0) {
+                cout << indent_str << "Instruction Buffer:" << endl;
+                cout << indent_str_next << "Area = " << gbuff->area.get_area()*1e-6 << " mm^2" << endl;
+                cout << indent_str_next << "Peak Dynamic = " << gbuff->power.readOp.dynamic * gbuff->clockRate << " W" << endl;
+                cout << indent_str_next << "Subthreshold Leakage = "
+                        << (long_channel ? gbuff->power.readOp.longer_channel_leakage : gbuff->power.readOp.leakage) << " W" << endl;
+                if (power_gating) cout << indent_str_next << "Subthreshold Leakage with power gating = "
+                        << (long_channel ? gbuff->power.readOp.power_gated_with_long_channel_leakage : gbuff->power.readOp.power_gated_leakage) << " W" << endl;
+                cout << indent_str_next << "Gate Leakage = " << gbuff->power.readOp.gate_leakage << " W" << endl;
+                cout << indent_str_next << "Runtime Dynamic = " << gbuff->rt_power.readOp.dynamic / gbuff->executionTime << " W" << endl;
+                cout << endl;
+                if (plevel > 2) {
+                    gbuff->displayEnergy(indent + 4, plevel, is_tdp);
+                }
+            }
 		cout <<"*****************************************************************************************"<<endl;
 		if (plevel >1)
 		{
@@ -693,7 +722,9 @@ void Processor::displayEnergy(uint32_t indent, int plevel, bool is_tdp)
 				pcie->displayEnergy(indent+4,is_tdp);
 				cout <<"*****************************************************************************************"<<endl;
 			}
-
+                        if(XML->sys.gbuffer.number_buffers>0){
+                            this->gbuff->displayEnergy(indent+4,is_tdp);
+                        }
 			for (i = 0;i < numNOC; i++)
 			{
 				nocs[i]->displayEnergy(indent+4,plevel,is_tdp);
@@ -875,4 +906,8 @@ Processor::~Processor(){
 		delete flashcontroller;
 		flashcontroller = 0;
 	}
+        if(gbuff){
+            delete gbuff;
+            gbuff=0;
+        }
 };

@@ -588,7 +588,6 @@ void ParseXML::parse(char* filepath)
 						}
                                                 if (strcmp(xNode4.getAttribute("name"),"IBuffer")==0)
 						{//find system.core0.ibuffer
-                                                    cout<<"Stats IBuffer"<<endl;
 							itmp=xNode4.nChildNode("param");
 							for(k=0; k<itmp; k++)
 							{ //get all items of param in system.core0.ibuffer--ibuffer
@@ -1427,7 +1426,35 @@ void ParseXML::parse(char* filepath)
 			printf("some value(s) of number_of_cores/number_of_L2s/number_of_L3s/number_of_NoCs is/are not correct!");
 			exit(0);
 		}
-
+                if (OrderofComponents_3layer>0) OrderofComponents_3layer=OrderofComponents_3layer+1;
+		xNode3=xNode2.getChildNode("component",OrderofComponents_3layer);
+		if (xNode3.isEmpty()==1) {
+			printf("some value(s) of number_of_cores/number_of_L2s/number_of_L3s/number_of_NoCs is/are not correct!");
+			exit(0);
+		}
+                
+                
+		if (strstr(xNode3.getAttribute("id"),"system.MainBuffer")!=NULL)
+		{
+			itmp=xNode3.nChildNode("param");
+			for(k=0; k<itmp; k++)
+			{ //get all items of param in system.mem
+				if (strcmp(xNode3.getChildNode("param",k).getAttribute("name"),"type")==0) {sys.gbuffer.type=atoi(xNode3.getChildNode("param",k).getAttribute("value"));continue;}
+                                if (strcmp(xNode3.getChildNode("param",k).getAttribute("name"),"number_mbuff")==0) {sys.gbuffer.number_buffers=atoi(xNode3.getChildNode("param",k).getAttribute("value"));continue;}
+				if (strcmp(xNode3.getChildNode("param",k).getAttribute("name"),"entryCount")==0) {sys.gbuffer.entryCount=atof(xNode3.getChildNode("param",k).getAttribute("value"));continue;}
+                                if (strcmp(xNode3.getChildNode("param",k).getAttribute("name"),"clockRate")==0) {sys.gbuffer.clockRate=atof(xNode3.getChildNode("param",k).getAttribute("value"));continue;}
+			}
+			itmp=xNode3.nChildNode("stat");
+			for(k=0; k<itmp; k++)
+			{ //get all items of stat in system.mendirectory
+				if (strcmp(xNode3.getChildNode("stat",k).getAttribute("name"),"number_of_writes")==0) {sys.gbuffer.numWrites=atoi(xNode3.getChildNode("stat",k).getAttribute("value"));continue;}
+				if (strcmp(xNode3.getChildNode("stat",k).getAttribute("name"),"total_queries")==0) {sys.gbuffer.numQueries=atoi(xNode3.getChildNode("stat",k).getAttribute("value"));continue;}
+			}
+		}
+		else{
+			printf("some value(s) of number_of_global_buffer is/are not correct!");
+			exit(0);
+		}
 	}
 }
 void ParseXML::initialize() //Initialize all

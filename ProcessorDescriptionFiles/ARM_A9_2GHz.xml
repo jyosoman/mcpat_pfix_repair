@@ -446,7 +446,9 @@
         <!--**********************************************************************-->
         <component id="system.MainBuffer" name="SharedBuffer">
             <param name="type" value="1"/> <!-- 1: low power; 0 high performance -->
-            <param name="entryCount" value="50"/>
+            <param name="number_mbuff" value="1"/>
+            <param name="entryCount" value="64"/>
+            <param name="clockrate" value="800"/>
             <stat name="number_of_writes" value="1"/> <!--Total number of reads -->
             <stat name="total_queries" value="1"/> <!-- Percentage of total achieved load to total achieve-able bandwidth  -->
             <!-- McPAT does not track individual flash controller, instead, it takes the total accesses and calculate 

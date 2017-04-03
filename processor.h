@@ -45,6 +45,7 @@
 #include "sharedcache.h"
 #include "noc.h"
 #include "iocontrollers.h"
+#include"globalIBuffer.h"
 
 class Processor : public Component
 {
@@ -60,11 +61,12 @@ class Processor : public Component
     NIUController    * niu;
     PCIeController   * pcie;
     FlashController  * flashcontroller;
+    globalBuffer* gbuff;
     InputParameter interface_ip;
     ProcParam procdynp;
     //wire	globalInterconnect;
     //clock_network globalClock;
-    Component core, l2, l3, l1dir, l2dir, noc, mcs, cc, nius, pcies,flashcontrollers;
+    Component core, l2, l3, l1dir, l2dir, noc, mcs, cc, nius, pcies,flashcontrollers,gbuffers;
     int  numCore, numL2, numL3, numNOC, numL1Dir, numL2Dir;
     Processor(ParseXML *XML_interface);
     void compute();
