@@ -1023,7 +1023,29 @@ exist(exist_) {
     Buffer = new ArrayST(&interface_ip, "Core Instruction Buffer", Core_device, coredynp.opt_local, coredynp.core_ty);
     Buffer->area.set_area(Buffer->area.get_area() + Buffer->local_result.area * coredynp.num_pipelines);
     area.set_area(area.get_area() + Buffer->local_result.area * coredynp.num_pipelines);
-   
+        bool is_default=true;
+        ID_inst = new inst_decoder(is_default, &interface_ip,
+            coredynp.opcode_length, 1/*Decoder should not know how many by itself*/,
+            coredynp.x86,
+            Core_device, coredynp.core_ty);
+
+    ID_operand = new inst_decoder(is_default, &interface_ip,
+            coredynp.arch_ireg_width, 1,
+            coredynp.x86,
+            Core_device, coredynp.core_ty);
+
+    ID_misc = new inst_decoder(is_default, &interface_ip,
+            8/* Prefix field etc upto 14B*/, 1,
+            coredynp.x86,
+            Core_device, coredynp.core_ty);
+    //TODO: X86 decoder should decode the inst in cyclic mode under the control of squencer.
+    //So the dynamic power should be multiplied by a few times.
+    area.set_area(area.get_area()+ (ID_inst->area.get_area()
+            + ID_operand->area.get_area()
+            + ID_misc->area.get_area()) * coredynp.decodeW);
+    Buffer->area.set_area(Buffer->area.get_area()+ (ID_inst->area.get_area()
+            + ID_operand->area.get_area()
+            + ID_misc->area.get_area()) * coredynp.decodeW);    
 
 }
 
