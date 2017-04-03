@@ -1023,6 +1023,7 @@ exist(exist_) {
     Buffer = new ArrayST(&interface_ip, "Core Instruction Buffer", Core_device, coredynp.opt_local, coredynp.core_ty);
     Buffer->area.set_area(Buffer->area.get_area() + Buffer->local_result.area * coredynp.num_pipelines);
     area.set_area(area.get_area() + Buffer->local_result.area * coredynp.num_pipelines);
+   
 
 }
 

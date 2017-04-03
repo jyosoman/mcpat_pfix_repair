@@ -191,7 +191,9 @@ public:
     double int_regfile_height, fp_regfile_height;
     
     bool exist;
-
+    inst_decoder * ID_inst;
+    inst_decoder * ID_operand;
+    inst_decoder * ID_misc;
     IBuffer(ParseXML *XML_interface, int ithCore_, InputParameter* interface_ip_, const CoreDynParam & dyn_p_, bool exist_ = true);
     void computeEnergy(bool is_tdp = true);
     void displayEnergy(uint32_t indent = 0, int plevel = 100, bool is_tdp = true);

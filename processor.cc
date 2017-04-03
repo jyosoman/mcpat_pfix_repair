@@ -657,7 +657,7 @@ void Processor::displayEnergy(uint32_t indent, int plevel, bool is_tdp)
 					cout <<endl;
             }
             if (XML->sys.gbuffer.number_buffers > 0) {
-                cout << indent_str << "Instruction Buffer:" << endl;
+                cout << indent_str << "Global Buffer:" << endl;
                 cout << indent_str_next << "Area = " << gbuff->area.get_area()*1e-6 << " mm^2" << endl;
                 cout << indent_str_next << "Peak Dynamic = " << gbuff->power.readOp.dynamic * gbuff->clockRate << " W" << endl;
                 cout << indent_str_next << "Subthreshold Leakage = "
@@ -722,9 +722,6 @@ void Processor::displayEnergy(uint32_t indent, int plevel, bool is_tdp)
 				pcie->displayEnergy(indent+4,is_tdp);
 				cout <<"*****************************************************************************************"<<endl;
 			}
-                        if(XML->sys.gbuffer.number_buffers>0){
-                            this->gbuff->displayEnergy(indent+4,is_tdp);
-                        }
 			for (i = 0;i < numNOC; i++)
 			{
 				nocs[i]->displayEnergy(indent+4,plevel,is_tdp);
