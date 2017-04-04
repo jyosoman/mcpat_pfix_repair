@@ -3531,9 +3531,27 @@ void IBuffer::computeEnergy(bool is_tdp) {
     if (is_tdp) {
         Buffer->power = Buffer->power_t + Buffer->local_result.power *pppm_lkg;
         power = power + Buffer->power;
+        ID_inst->power_t.readOp.dynamic = ID_inst->power.readOp.dynamic;
+        ID_operand->power_t.readOp.dynamic = ID_operand->power.readOp.dynamic;
+        ID_misc->power_t.readOp.dynamic = ID_misc->power.readOp.dynamic;
+
+        ID_inst->power.readOp.dynamic *= ID_inst->tdp_stats.readAc.access;
+        ID_operand->power.readOp.dynamic *= ID_operand->tdp_stats.readAc.access;
+        ID_misc->power.readOp.dynamic *= ID_misc->tdp_stats.readAc.access;
+
+        power = power + (ID_inst->power +
+                ID_operand->power +
+                ID_misc->power);
     } else {
         Buffer->rt_power = Buffer->power_t + Buffer->local_result.power *pppm_lkg;
         rt_power = rt_power + Buffer->rt_power;
+        ID_inst->rt_power.readOp.dynamic = ID_inst->power_t.readOp.dynamic * ID_inst->rtp_stats.readAc.access;
+        ID_operand->rt_power.readOp.dynamic = ID_operand->power_t.readOp.dynamic * ID_operand->rtp_stats.readAc.access;
+        ID_misc->rt_power.readOp.dynamic = ID_misc->power_t.readOp.dynamic * ID_misc->rtp_stats.readAc.access;
+
+        rt_power = rt_power + (ID_inst->rt_power +
+                ID_operand->rt_power +
+                ID_misc->rt_power);
     }
 }
 
